@@ -1,0 +1,6 @@
+---
+json_rpc_url: "https://api.testnet.solana.com"
+websocket_url: ""
+keypair_path: /home/sol/validator-keypair.json
+address_labels:
+  "11111111111111111111111111111111": System Program
