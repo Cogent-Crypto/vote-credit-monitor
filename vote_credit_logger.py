@@ -1,6 +1,6 @@
 import subprocess
 import time
-
+import os
 import argparse
 
 
@@ -10,14 +10,12 @@ parser.add_argument('--interval',  action='store', default=60, type=int)
 args = parser.parse_args()
 
 CONFIG = "mainnet.yml"
+DATA_DIR = "mainnet_data"
 if args.testnet:
     CONFIG = "testnet.yml"
     DATA_DIR = "testnet_data"
 
-
-
-
-
+os.makedirs(DATA_DIR, exist_ok=False)
 
 def download_and_save_validator_data():
     bashCommand = f"solana validators --config {CONFIG}"
