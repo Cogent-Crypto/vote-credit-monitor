@@ -6,17 +6,21 @@ import argparse
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--testnet',  action='store_true')
 parser.add_argument('--offset',  action='store', default=1642174577/60, type=int)
+
             
 
 args = parser.parse_args()
 
 MIN_TIME = round(time.time() - args.offset*60)
-DATA_DIR = "data"
+DATA_DIR = "mainnet_data"
 if args.testnet:
     DATA_DIR = "testnet_data"
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
 
 
-pubkey_callouts = ["Cogent51kHgGLHr7zpkpRjGYFXM57LgjHjDdqXd4ypdA", "1aine15iEqZxYySNwcHtQFt4Sgc75cbEi9wks8YgNCa", "Ninja1spj6n9t5hVYgF3PdnYz2PLnkt7rvaw3firmjs","REP1mrsuiF6MqfCGMGSZaNamFKePYCEX5i2H1NQF3vh", "CogentY4pfVuA9iVniyyoDxvTABdDpS1aKUPryMZwcML"]
+
+pubkey_callouts = ["DeadGodP9cErFezDuWRBQk4foLZbZfyBWmzHxGu6BLTo","Cogent51kHgGLHr7zpkpRjGYFXM57LgjHjDdqXd4ypdA", "1aine15iEqZxYySNwcHtQFt4Sgc75cbEi9wks8YgNCa", "Ninja1spj6n9t5hVYgF3PdnYz2PLnkt7rvaw3firmjs","Perf1UR2MyPK7RzTj5kBfNTDoJuhKraZ3oGt58QNwRc", "FLVgaCPvSGFguumN9ao188izB4K4rxSWzkHneQMtkwQJ", "7y5VhV4fkz6r4zUmH2UiwPjLwXzPL1PcV28or5NWkWRL", "Frog1Fks1AVN8ywFH3HTFeYojq6LQqoEPzgQFx2Kz5Ch", "JBCyKTG8h8tF7m54PELfM336i9T8Bhmeb6vLGDCCS7vZ", "PUmpKiNnSVAZ3w4KaFX6jKSjXUNHFShGkXbERo54xjb", "6TkKqq15wXjqEjNg9zqTKADwuVATR9dW3rkNnsYme1ea", "Bxmnb2F1hphsKrJhfJw1Cr1gGs5GBzxScNk9NgGNFS6f", "yYnFMMTqNEYbXvprpimzrsNc3oLHxEyhc8pgCdM1Y5C"]
 
 def identity_credits_for_line(line):
     identity = line[2:46].strip()
@@ -35,9 +39,9 @@ def load_validator_credits(file_path):
         lines = f.readlines()
     return dict([identity_credits_for_line(line) for line in lines])
             
-
+files = [x for x in sorted(os.listdir(DATA_DIR)) if int(x[:10]) > MIN_TIME]
 def vote_credits_per_second():
-    files = [x for x in sorted(os.listdir(DATA_DIR)) if int(x[:10]) > MIN_TIME]
+    
     start_time = int(files[0][:10])
     end_time = int(files[-1][:10])
     elapsed_time = float(end_time - start_time)
@@ -59,11 +63,15 @@ def print_report_(vote_credits, pubkey_callouts):
         print("testnet")
     else:
         print("mainnet")
+    print(f"reporting from slot {files[0][:-4]} to slot {files[-1][:-4]}")
     print(f"cluster average: {' '*27} {top_x_average(vote_credits, x=1000)}")
     print(f"top 100 average: {' '*27} {top_x_average(vote_credits, x=100)}")
     for pubkey in pubkey_callouts:
         if pubkey in vote_credits:
             print(f"{pubkey}: {vote_credits[pubkey]}")
+        # else:
+            # print(f"{pubkey} not found")
+            
 
 
 

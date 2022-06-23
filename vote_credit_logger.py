@@ -15,7 +15,7 @@ if args.testnet:
     CONFIG = "testnet.yml"
     DATA_DIR = "testnet_data"
 
-os.makedirs(DATA_DIR, exist_ok=False)
+os.makedirs(DATA_DIR, exist_ok=True)
 
 def download_and_save_validator_data():
     bashCommand = f"solana validators --config {CONFIG}"
@@ -29,6 +29,6 @@ def download_and_save_validator_data():
 
 while True:
     download_and_save_validator_data()
-    time.sleep(60)
+    time.sleep(120)
 
 
