@@ -4,4 +4,4 @@
 python vote_credit_logger.py
 
 ## to see a report from the first logged slot to the last logged slot run
-process_logs.py
+python process_logs.py
